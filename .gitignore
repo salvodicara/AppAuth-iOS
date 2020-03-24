@@ -1,3 +1,6 @@
 Docs/
 xcuserdata/
 Carthage/
+.DS_Store
+Examples/.DS_Store
+Examples/Example-iOS_Swift-Carthage/.DS_Store
