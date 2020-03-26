@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D7F3BD1242D40C000554CC9 /* credentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9D7F3BD0242D40C000554CC9 /* credentials.plist */; };
 		9F265BD11F9AC69300DC14BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F265BC91F9AC69300DC14BF /* Assets.xcassets */; };
 		9F265BD31F9AC69300DC14BF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F265BCB1F9AC69300DC14BF /* LaunchScreen.storyboard */; };
 		9F265BD41F9AC69300DC14BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F265BCD1F9AC69300DC14BF /* Main.storyboard */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9D7F3BD0242D40C000554CC9 /* credentials.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = credentials.plist; sourceTree = "<group>"; };
 		9F265B971F9AC5D600DC14BF /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F265BC91F9AC69300DC14BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9F265BCC1F9AC69300DC14BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 			children = (
 				9F265BCF1F9AC69300DC14BF /* AppDelegate.swift */,
 				9FD378221FB7C6F800436204 /* AppAuthExampleViewController.swift */,
+				9D7F3BD0242D40C000554CC9 /* credentials.plist */,
 				9F265BCB1F9AC69300DC14BF /* LaunchScreen.storyboard */,
 				9F265BCD1F9AC69300DC14BF /* Main.storyboard */,
 				9F265BC91F9AC69300DC14BF /* Assets.xcassets */,
@@ -137,6 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F265BD41F9AC69300DC14BF /* Main.storyboard in Resources */,
+				9D7F3BD1242D40C000554CC9 /* credentials.plist in Resources */,
 				9F265BD11F9AC69300DC14BF /* Assets.xcassets in Resources */,
 				9F265BD31F9AC69300DC14BF /* LaunchScreen.storyboard in Resources */,
 			);

@@ -24,7 +24,10 @@ typealias PostRegistrationCallback = (_ configuration: OIDServiceConfiguration?,
 /**
  The OIDC issuer from which the configuration will be discovered.
 */
-let kIssuer: String = "https://issuer.example.com";
+//GOOGLE ISSUER
+let kIssuer: String = "https://accounts.google.com";
+//OKTA ISSUER
+//let kIssuer: String = "https://dev-910129-admin.okta.com";
 
 /**
  The OAuth client ID.
@@ -32,14 +35,20 @@ let kIssuer: String = "https://issuer.example.com";
  For client configuration instructions, see the [README](https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md).
  Set to nil to use dynamic registration with this example.
 */
-let kClientID: String? = "YOUR_CLIENT_ID";
+//GOOGLE CLIENT ID
+let kClientID: String? = "667948285231-27rc7mif331pk8fnkgnst7rg48bfsml2.apps.googleusercontent.com";
+//OKTA CLIENT ID
+//let kClientID: String? = "0oa4ywvz0LL0PHtGF4x6";
 
 /**
  The OAuth redirect URI for the client @c kClientID.
 
  For client configuration instructions, see the [README](https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md).
 */
-let kRedirectURI: String = "com.example.app:/oauth2redirect/example-provider";
+//GOOGLE REDIRECT
+let kRedirectURI: String = "com.googleusercontent.apps.667948285231-27rc7mif331pk8fnkgnst7rg48bfsml2:/oauth2redirect/google";
+//OKTA REDIRECT
+//let kRedirectURI: String = "com.okta.dev-910129:/callback";
 
 /**
  NSCoding key for the authState property.

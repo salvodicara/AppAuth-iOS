@@ -21,9 +21,21 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Google Credentials</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.example.app</string>
+				<string>667948285231-27rc7mif331pk8fnkgnst7rg48bfsml2.apps.googleusercontent.com</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Google credentials 2</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.667948285231-27rc7mif331pk8fnkgnst7rg48bfsml2</string>
 			</array>
 		</dict>
 	</array>
