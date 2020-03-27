@@ -50,6 +50,30 @@ let kRedirectURI: String = "com.googleusercontent.apps.667948285231-27rc7mif331p
 //OKTA REDIRECT
 //let kRedirectURI: String = "com.okta.dev-910129:/callback";
 
+//Extensions to enable x-www-form-urlencoded
+extension Dictionary {
+    func percentEncoded() -> Data? {
+        return map { key, value in
+            let escapedKey = "\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? ""
+            let escapedValue = "\(value)".addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? ""
+            return escapedKey + "=" + escapedValue
+        }
+        .joined(separator: "&")
+        .data(using: .utf8)
+    }
+}
+
+extension CharacterSet {
+    static let urlQueryValueAllowed: CharacterSet = {
+        let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
+        let subDelimitersToEncode = "!$&'()*+,;="
+
+        var allowed = CharacterSet.urlQueryAllowed
+        allowed.remove(charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")
+        return allowed
+    }()
+}
+//END Extensions to enable x-www-form-urlencoded
 /**
  NSCoding key for the authState property.
 */
@@ -62,10 +86,12 @@ class AppAuthExampleViewController: UIViewController {
     @IBOutlet private weak var authManual: UIButton!
     @IBOutlet private weak var codeExchangeButton: UIButton!
     @IBOutlet private weak var userinfoButton: UIButton!
+    @IBOutlet private weak var sendTokenButton: UIButton!
     @IBOutlet private weak var logTextView: UITextView!
     @IBOutlet private weak var trashButton: UIBarButtonItem!
 
     private var authState: OIDAuthState?
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -225,7 +251,112 @@ extension AppAuthExampleViewController {
             self.authState?.update(with: response, error: error)
         }
     }
+    @IBAction func sendToken(_ sender: UIButton) {
+        sender.setTitle("That tickled!", for: .normal)
+        //CUMULOCITY CREDENTIALS
+        let username = "salvatore@cothamtechnologies.com"
+        let password = "Password123!"
+        let loginString = String(format: "%@:%@", username, password)
+        let loginData = loginString.data(using: String.Encoding.utf8)!
+        let base64LoginString = loginData.base64EncodedString()
+        
+        let currentAccessToken: String? = self.authState?.lastTokenResponse?.accessToken
+        //RETRIEVE ACCESS TOKEN
+        self.authState?.performAction() { (accessToken, idToken, error) in
 
+            if error != nil  {
+                self.logMessage("Error fetching fresh tokens: \(error?.localizedDescription ?? "ERROR")")
+                return
+            }
+
+            guard let accessToken = accessToken else {
+                self.logMessage("Error getting accessToken")
+                return
+            }
+            guard let idToken = idToken else {
+                self.logMessage("Error getting idToken")
+                return
+            }
+            if currentAccessToken != accessToken {
+                self.logMessage("Access token was refreshed automatically (\(currentAccessToken ?? "CURRENT_ACCESS_TOKEN") to \(accessToken))")
+            } else {
+                self.logMessage("Access token was fresh and not updated \(accessToken)")
+            }
+            //SEND TOKEN TO SERVER
+            guard let tokenEndpoint = URL(string: "https://cotham.eu-latest.cumulocity.com/service/sensor-microservice") else {
+                self.logMessage("Token endpoint is not a valid URL")
+                return
+            }
+            self.logMessage("Sending access token to server")
+            self.logMessage(tokenEndpoint.absoluteString)
+            var urlRequest = URLRequest(url: tokenEndpoint)
+            //urlRequest.allHTTPHeaderFields = ["Authorization":"Bearer \(accessToken)"]
+            //AUTHORIZATION: MY BASE64 ENC CUMULOCITY CREDENTIALS
+            urlRequest.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+            urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            urlRequest.httpMethod = "POST"
+            let parameters: [String: Any] = [
+                "issuerURI": kIssuer,
+                "clientId": kClientID!,
+                "accessToken": accessToken,
+                "idToken": idToken
+            ]
+            urlRequest.httpBody = parameters.percentEncoded()
+            let task = URLSession.shared.dataTask(with: urlRequest) { data, response, error in
+
+                DispatchQueue.main.async {
+                    
+                    guard error == nil else {
+                        self.logMessage("HTTP request failed \(error?.localizedDescription ?? "ERROR")")
+                        return
+                    }
+
+                    guard let response = response as? HTTPURLResponse else {
+                        self.logMessage("Non-HTTP response")
+                        return
+                    }
+
+                    guard let data = data else {
+                        self.logMessage("HTTP response data is empty")
+                        return
+                    }
+
+                    var json: [AnyHashable: Any]?
+
+                    do {
+                        json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                    } catch {
+                        self.logMessage("JSON Serialization Error")
+                    }
+
+                    if response.statusCode != 200 {
+                        // server replied with an error
+                        let responseText: String? = String(data: data, encoding: String.Encoding.utf8)
+
+                        if response.statusCode == 401 {
+                            // "401 Unauthorized" generally indicates there is an issue with the authorization
+                            // grant. Puts OIDAuthState into an error state.
+                            let oauthError = OIDErrorUtilities.resourceServerAuthorizationError(withCode: 0,
+                                                                                                errorResponse: json,
+                                                                                                underlyingError: error)
+                            self.authState?.update(withAuthorizationError: oauthError)
+                            self.logMessage("Authorization Error (\(oauthError)). Response: \(responseText ?? "RESPONSE_TEXT")")
+                        } else {
+                            self.logMessage("HTTP: \(response.statusCode), Response: \(responseText ?? "RESPONSE_TEXT")")
+                        }
+
+                        return
+                    }
+
+                    if let json = json {
+                        self.logMessage("Success: \(json)")
+                    }
+                }
+            }
+            task.resume()
+            
+        }
+    }
     @IBAction func userinfo(_ sender: UIButton) {
 
         guard let userinfoEndpoint = self.authState?.lastAuthorizationResponse.request.configuration.discoveryDocument?.userinfoEndpoint else {
