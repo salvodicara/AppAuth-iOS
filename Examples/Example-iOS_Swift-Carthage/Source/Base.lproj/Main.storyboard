@@ -120,14 +120,14 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iQ4-4P-IxD">
-                                <rect key="frame" x="10" y="169" width="103" height="40"/>
+                                <rect key="frame" x="10" y="169" width="135" height="40"/>
                                 <color key="backgroundColor" red="0.1450980392" green="0.2901960784" blue="0.43529411759999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="7FT-Vh-HAP"/>
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="200" id="ewr-FD-Iau"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="3. Send Token">
+                                <state key="normal" title="3. Send Token Info">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <state key="disabled">

@@ -252,7 +252,8 @@ extension AppAuthExampleViewController {
         }
     }
     @IBAction func sendToken(_ sender: UIButton) {
-        sender.setTitle("That tickled!", for: .normal)
+        //Update button once it is clicked
+        self.sendTokenButton.setTitle("3. Re-send Token Info", for: .normal)
         //CUMULOCITY CREDENTIALS
         let username = "salvatore@cothamtechnologies.com"
         let password = "Password123!"
@@ -283,11 +284,12 @@ extension AppAuthExampleViewController {
                 self.logMessage("Access token was fresh and not updated \(accessToken)")
             }
             //SEND TOKEN TO SERVER
-            guard let tokenEndpoint = URL(string: "https://cotham.eu-latest.cumulocity.com/service/sensor-microservice") else {
+            guard let tokenEndpoint = URL(string: "https://cotham.eu-latest.cumulocity.com/service/sensor-microservice/test/token") else {
                 self.logMessage("Token endpoint is not a valid URL")
                 return
             }
-            self.logMessage("Sending access token to server")
+            
+            self.logMessage("Sending token info to server")
             self.logMessage(tokenEndpoint.absoluteString)
             var urlRequest = URLRequest(url: tokenEndpoint)
             //urlRequest.allHTTPHeaderFields = ["Authorization":"Bearer \(accessToken)"]
@@ -635,10 +637,15 @@ extension AppAuthExampleViewController {
             self.authAutoButton.setTitle("1. Re-Auth", for: .normal)
             self.authManual.setTitle("1(A) Re-Auth", for: .normal)
             self.userinfoButton.isEnabled = authState.isAuthorized ? true : false
+            //ADDED
+            self.sendTokenButton.isEnabled = authState.isAuthorized ? true : false
         } else {
             self.authAutoButton.setTitle("1. Auto", for: .normal)
             self.authManual.setTitle("1(A) Manual", for: .normal)
             self.userinfoButton.isEnabled = false
+            //ADDED
+            self.sendTokenButton.setTitle("3. Send Token Info", for: .normal)
+            self.sendTokenButton.isEnabled = false
         }
     }
 
