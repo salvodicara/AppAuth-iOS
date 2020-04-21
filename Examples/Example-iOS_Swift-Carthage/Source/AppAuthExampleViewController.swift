@@ -28,7 +28,8 @@ typealias PostRegistrationCallback = (_ configuration: OIDServiceConfiguration?,
 let kIssuer: String = "https://accounts.google.com";
 //OKTA ISSUER
 //let kIssuer: String = "https://dev-910129-admin.okta.com";
-
+//CUMULOCITY
+//let kIssuer: String = "https://cotham.eu-latest.cumulocity.com/tenant/loginOptions";
 /**
  The OAuth client ID.
 
@@ -39,7 +40,8 @@ let kIssuer: String = "https://accounts.google.com";
 let kClientID: String? = "667948285231-27rc7mif331pk8fnkgnst7rg48bfsml2.apps.googleusercontent.com";
 //OKTA CLIENT ID
 //let kClientID: String? = "0oa4ywvz0LL0PHtGF4x6";
-
+//CUMULOCITY
+//let kClientID: String? = "cotham";
 /**
  The OAuth redirect URI for the client @c kClientID.
 
@@ -49,7 +51,15 @@ let kClientID: String? = "667948285231-27rc7mif331pk8fnkgnst7rg48bfsml2.apps.goo
 let kRedirectURI: String = "com.googleusercontent.apps.667948285231-27rc7mif331pk8fnkgnst7rg48bfsml2:/oauth2redirect/google";
 //OKTA REDIRECT
 //let kRedirectURI: String = "com.okta.dev-910129:/callback";
+//CUMULOCITY
+//let kRedirectURI: String = "com.cumulocity.eu-latest.cotham.0cfa35ac-f5e9-4dd6-8ab0-0da4913cbc34:/callback";
 
+//ONLY FOR CUMULOCITY (NO DISCOVER)
+let kAuthorizationEndpoint = URL(string: "https://cotham.eu-latest.cumulocity.com/tenant/oauth")!
+let kTokenEndpoint = URL(string: "https://cotham.eu-latest.cumulocity.com/tenant/oauth")!
+let kConfiguration = OIDServiceConfiguration(authorizationEndpoint: kAuthorizationEndpoint,
+                                            tokenEndpoint: kTokenEndpoint)
+ 
 //Extensions to enable x-www-form-urlencoded
 extension Dictionary {
     func percentEncoded() -> Data? {
@@ -162,11 +172,17 @@ extension AppAuthExampleViewController {
         // discovers endpoints
         OIDAuthorizationService.discoverConfiguration(forIssuer: issuer) { configuration, error in
 
-            guard let config = configuration else {
+            
+             //NORMALLY
+            
+             guard let config = configuration else {
                 self.logMessage("Error retrieving discovery document: \(error?.localizedDescription ?? "DEFAULT_ERROR")")
                 self.setAuthState(nil)
                 return
             }
+            
+            //FOR CUMULOCITY
+            //let config = kConfiguration;
 
             self.logMessage("Got configuration: \(config)")
 
@@ -199,7 +215,8 @@ extension AppAuthExampleViewController {
         self.logMessage("Fetching configuration for issuer: \(issuer)")
 
         OIDAuthorizationService.discoverConfiguration(forIssuer: issuer) { configuration, error in
-
+            //NORMALLY
+            
             if let error = error  {
                 self.logMessage("Error retrieving discovery document: \(error.localizedDescription)")
                 return
@@ -209,6 +226,9 @@ extension AppAuthExampleViewController {
                 self.logMessage("Error retrieving discovery document. Error & Configuration both are NIL!")
                 return
             }
+            
+            //FOR CUMULOCITY
+            //let configuration = kConfiguration;
 
             self.logMessage("Got configuration: \(configuration)")
 
